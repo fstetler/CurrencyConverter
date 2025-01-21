@@ -27,10 +27,13 @@ public class ExchangeRateController {
         return exchangeRateService.getExchangeRateByCode(currencyCode.toUpperCase());
     }
 
+    @GetMapping("/exchange/{value}/{fromCurrency}/{toCurrency}")
+    public double exchangeCurrency(@PathVariable double value, @PathVariable String fromCurrency, @PathVariable String toCurrency) {
+        return exchangeRateService.exchangeCurrencyFromTo(value, fromCurrency, toCurrency);
+    }
+
     @PostMapping("/updateExchangeRates")
     public void updateExchangeRates() {
         exchangeRateService.updateExchangeRates();
     }
-
-
 }

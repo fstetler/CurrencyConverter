@@ -4,6 +4,8 @@ import org.example.currencyconverter.model.ExchangeRate;
 import org.example.currencyconverter.repository.ExchangeRateRepository;
 import org.example.currencyconverter.util.ApiResponse;
 import org.example.currencyconverter.util.RiksbankApiReader;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -28,6 +30,20 @@ public class ExchangeRateService {
         return repository.findById(code);
     }
 
+    public double exchangeCurrencyFromTo(double value, String fromCurrency, String toCurrency) {
+        Optional<ExchangeRate> currency = Optional.of(repository.findById(fromCurrency.toUpperCase())).get();
+
+        if (toCurrency.equalsIgnoreCase("SEK")) {
+            return value * currency.get().getExchangeRateToSek();
+        } else if (toCurrency.equalsIgnoreCase("USD")) {
+            return value * currency.get().getExchangeRateToUsd();
+        } else if (toCurrency.equalsIgnoreCase("EUR")) {
+            return value * currency.get().getExchangeRateToEur();
+        }
+
+        return 1.0;
+    }
+
     public void updateExchangeRates() {
         RiksbankApiReader riksbankApiReader = new RiksbankApiReader();
         double sekToEur = riksbankApiReader.exchangeRate("SEKETT", "SEKEURPMI");
@@ -43,5 +59,10 @@ public class ExchangeRateService {
         repository.save(new ExchangeRate("EUR", eurToSek, 1, eurToUsd));
         repository.save(new ExchangeRate("USD", usdToSek, usdToEur, 1));
 
+    }
+
+    @EventListener(ApplicationReadyEvent.class)
+    public void updateExchangeRatesOnStartup() {
+        updateExchangeRates();
     }
 }
