@@ -1,6 +1,7 @@
 package org.example.currencyconverter.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
 import java.net.URI;
@@ -15,12 +16,14 @@ public class RiksbankApiReader {
     public Double exchangeRate(String seriesId, String seriesIdToCompareTo) {
         LocalDate todaysDate = LocalDate.now();
 
-        String exchangeRate = "https://api.riksbank.se/swea/v1/CrossRates/" + seriesId + "/" + seriesIdToCompareTo + "/" + todaysDate;
+        String exchangeRate = "https://api.riksbank.se/swea/v1/CrossRate/" + seriesId + "/" + seriesIdToCompareTo + "/" + todaysDate;
 
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder().uri(URI.create(exchangeRate)).GET().build();
+
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
             ObjectMapper objectMapper = new ObjectMapper();
             ApiResponse[] apiResponse = objectMapper.readValue(response.body(), ApiResponse[].class);
             return apiResponse[0].getValue();

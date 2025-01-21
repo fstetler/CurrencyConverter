@@ -31,8 +31,15 @@ public class ExchangeRateController {
     }
 
     @GetMapping("/exchange/{value}/{fromCurrency}/{toCurrency}")
-    public double exchangeCurrency(@PathVariable double value, @PathVariable String fromCurrency, @PathVariable String toCurrency) {
-        return exchangeRateService.exchangeCurrencyFromTo(value, fromCurrency, toCurrency);
+    public ResponseEntity<Double> exchangeCurrency(@PathVariable double value, @PathVariable String fromCurrency, @PathVariable String toCurrency) {
+        Optional<ExchangeRate> exchangeRateFromCurrency = exchangeRateService.getExchangeRateByCode(fromCurrency.toUpperCase());
+        Optional<ExchangeRate> exchangeRateToCurrency = exchangeRateService.getExchangeRateByCode(toCurrency.toUpperCase());
+
+        if (exchangeRateFromCurrency.isEmpty() || exchangeRateToCurrency.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        return ResponseEntity.ok(exchangeRateService.exchangeCurrencyFromTo(value, fromCurrency, toCurrency));
     }
 
     @PostMapping("/updateExchangeRates")
