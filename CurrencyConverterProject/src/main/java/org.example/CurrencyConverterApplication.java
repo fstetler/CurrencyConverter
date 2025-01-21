@@ -8,9 +8,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class CurrencyConverterApplication {
 
 	public static void main(String[] args) {
-		RiksbankApiReader riksbankApiReader = new RiksbankApiReader();
-		System.out.print(riksbankApiReader.exchangeRate("SEKEURPMI", "SEKETT"));
-		//SpringApplication.run(CurrencyConverterApplication.class, args);
+//		RiksbankApiReader riksbankApiReader = new RiksbankApiReader();
+//		System.out.print(riksbankApiReader.exchangeRate("SEKEURPMI", "SEKETT"));
+		SpringApplication.run(CurrencyConverterApplication.class, args);
 	}
 
 }

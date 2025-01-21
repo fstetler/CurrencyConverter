@@ -1,4 +1,4 @@
-package org.example.currencyconverter.model;
+package org.example.currencyconverter.util;
 
 public class ApiResponse {
 

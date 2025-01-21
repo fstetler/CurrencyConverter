@@ -1,8 +1,6 @@
 package org.example.currencyconverter.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.currencyconverter.model.ApiResponse;
-import org.springframework.web.util.UriBuilder;
 
 import java.io.IOException;
 import java.net.URI;

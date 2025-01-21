@@ -24,7 +24,12 @@ public class ExchangeRateController {
 
     @GetMapping("/getExchangeRate/{currencyCode}")
     public Optional<ExchangeRate> getExchangeRate(@PathVariable String currencyCode) {
-        return exchangeRateService.getExchangeRateByCode(currencyCode);
+        return exchangeRateService.getExchangeRateByCode(currencyCode.toUpperCase());
+    }
+
+    @PostMapping("/updateExchangeRates")
+    public void updateExchangeRates() {
+        exchangeRateService.updateExchangeRates();
     }
 
 
