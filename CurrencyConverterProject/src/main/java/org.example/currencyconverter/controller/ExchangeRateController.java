@@ -2,6 +2,8 @@ package org.example.currencyconverter.controller;
 
 import org.example.currencyconverter.model.ExchangeRate;
 import org.example.currencyconverter.service.ExchangeRateService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,8 +25,9 @@ public class ExchangeRateController {
     }
 
     @GetMapping("/getExchangeRate/{currencyCode}")
-    public Optional<ExchangeRate> getExchangeRate(@PathVariable String currencyCode) {
-        return exchangeRateService.getExchangeRateByCode(currencyCode.toUpperCase());
+    public ResponseEntity<ExchangeRate> getExchangeRate(@PathVariable String currencyCode) {
+        Optional<ExchangeRate> exchangeRate = exchangeRateService.getExchangeRateByCode(currencyCode.toUpperCase());
+        return exchangeRate.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @GetMapping("/exchange/{value}/{fromCurrency}/{toCurrency}")

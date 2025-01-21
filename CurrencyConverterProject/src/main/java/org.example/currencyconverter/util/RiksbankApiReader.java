@@ -12,8 +12,6 @@ import java.time.LocalDate;
 
 public class RiksbankApiReader {
 
-
-    // seriesId is either 'SEKETT' for SEK, 'SEKEURPMI' for EUR, or 'SEKUSDPMI' for USD
     public Double exchangeRate(String seriesId, String seriesIdToCompareTo) {
         LocalDate todaysDate = LocalDate.now();
 
@@ -29,11 +27,5 @@ public class RiksbankApiReader {
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
-
-
-
-
     }
-
-
 }
