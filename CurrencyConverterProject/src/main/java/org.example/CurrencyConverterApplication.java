@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.currencyconverter.util.RiksbankApiReader;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -7,7 +8,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class CurrencyConverterApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CurrencyConverterApplication.class, args);
+		RiksbankApiReader riksbankApiReader = new RiksbankApiReader();
+		System.out.print(riksbankApiReader.exchangeRate("SEKEURPMI", "SEKETT"));
+		//SpringApplication.run(CurrencyConverterApplication.class, args);
 	}
 
 }
