@@ -32,12 +32,3 @@ Result will be a double
 
 - http://localhost:8080/api/v1/updateExchangeRates
 This will update the exchange rates. A new exchange rate is given by riksbanken at 16:15 every day.
-
-
-If I had more time: current problems are that if I update exchange rates more than 5 times, it will
-give error code 429. Also if the api doesnt work at all, I would have liked to deal with that.
-Idea for the first problem would have been to create another class in util similar to ApiResponse called
-"TooManyResponses" or similar, and if I got the error code 429 I would instead return that in my
-RiksbankApiReader on line 35. I tried to do it, but it got tangled and time limit made me go for a cleaner
-approach. Similar would be made for if the api had crashed all together, maybe a 500 code would be returned
-and processed in a similar way then.

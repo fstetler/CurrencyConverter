@@ -13,7 +13,7 @@ import java.time.LocalTime;
 
 public class RiksbankApiReader {
 
-    public Double exchangeRate(String seriesId, String seriesIdToCompareTo) {
+    public Double exchangeRate(String seriesId, String seriesIdToCompareTo) throws TooManyRequestsException {
         LocalDateTime todaysDateTime = LocalDateTime.now();
         LocalDate todaysDate = todaysDateTime.toLocalDate();
         LocalTime fourFifteenTime = LocalTime.of(16, 15);
@@ -30,7 +30,9 @@ public class RiksbankApiReader {
 
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
+            if (response.statusCode() == 429) {
+                throw new TooManyRequestsException(response.body());
+            }
             ObjectMapper objectMapper = new ObjectMapper();
             ApiResponse[] apiResponse = objectMapper.readValue(response.body(), ApiResponse[].class);
             return apiResponse[0].getValue();

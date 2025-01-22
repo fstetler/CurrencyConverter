@@ -3,6 +3,7 @@ package org.example.currencyconverter.service;
 import org.example.currencyconverter.model.ExchangeRate;
 import org.example.currencyconverter.repository.ExchangeRateRepository;
 import org.example.currencyconverter.util.RiksbankApiReader;
+import org.example.currencyconverter.util.TooManyRequestsException;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
@@ -40,7 +41,7 @@ public class ExchangeRateService {
         }
     }
 
-    public void updateExchangeRates() {
+    public void updateExchangeRates() throws TooManyRequestsException {
         RiksbankApiReader riksbankApiReader = new RiksbankApiReader();
 
         double sekToEur = riksbankApiReader.exchangeRate("SEKETT", "SEKEURPMI");
@@ -55,11 +56,10 @@ public class ExchangeRateService {
         repository.save(new ExchangeRate("SEK", 1, sekToEur, sekToUsd));
         repository.save(new ExchangeRate("EUR", eurToSek, 1, eurToUsd));
         repository.save(new ExchangeRate("USD", usdToSek, usdToEur, 1));
-
     }
 
     @EventListener(ApplicationReadyEvent.class)
-    public void updateExchangeRatesOnStartup() {
+    public void updateExchangeRatesOnStartup() throws TooManyRequestsException {
         updateExchangeRates();
     }
 }

@@ -2,6 +2,7 @@ package org.example.currencyconverter.controller;
 
 import org.example.currencyconverter.model.ExchangeRate;
 import org.example.currencyconverter.service.ExchangeRateService;
+import org.example.currencyconverter.util.TooManyRequestsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +44,12 @@ public class ExchangeRateController {
     }
 
     @PostMapping("/updateExchangeRates")
-    public void updateExchangeRates() {
-        exchangeRateService.updateExchangeRates();
+    public ResponseEntity<String> updateExchangeRates() {
+        try {
+            exchangeRateService.updateExchangeRates();
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } catch (TooManyRequestsException e) {
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(e.getMessage());
+        }
     }
 }
