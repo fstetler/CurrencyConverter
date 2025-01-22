@@ -2,7 +2,10 @@ package org.example.currencyconverter.controller;
 
 import org.example.currencyconverter.model.ExchangeRate;
 import org.example.currencyconverter.service.ExchangeRateService;
+import org.example.currencyconverter.util.RiksbankApiReader;
 import org.example.currencyconverter.util.TooManyRequestsException;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +16,8 @@ import java.util.Optional;
 @RestController
 @RequestMapping(path = "api/v1")
 public class ExchangeRateController {
+
+    RiksbankApiReader riksbankApiReader = new RiksbankApiReader();
 
     private final ExchangeRateService exchangeRateService;
 
@@ -46,10 +51,18 @@ public class ExchangeRateController {
     @PostMapping("/updateExchangeRates")
     public ResponseEntity<String> updateExchangeRates() {
         try {
-            exchangeRateService.updateExchangeRates();
+            double sekToEur = riksbankApiReader.exchangeRate("SEKETT", "SEKEURPMI");
+            double sekToUsd = riksbankApiReader.exchangeRate("SEKETT", "SEKUSDPMI");
+
+            exchangeRateService.updateExchangeRates(sekToEur, sekToUsd);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } catch (TooManyRequestsException e) {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(e.getMessage());
         }
+    }
+
+    @EventListener(ApplicationReadyEvent.class)
+    public void updateExchangeRatesOnStartup() {
+        updateExchangeRates();
     }
 }

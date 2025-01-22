@@ -34,6 +34,6 @@ Result will be a double
 This will update the exchange rates. A new exchange rate is given by riksbanken at 16:15 every day.
 
 Epilogue:
-If I had more time I would have made tests, and mocked away the database and tested the service layer.
-I also wouldnt have called an api through riksbankapireader on the service layer, instead put it on
-the controller layer
+If I had more time I would have made tests, and mocked away the database and tested the service layer. I also
+would have dealt with what happens when the api isnt reachable, so it would give a error code 500. I would have made it
+so it returned a more reasonable code and a message telling us that the api was shut down or something similar.
