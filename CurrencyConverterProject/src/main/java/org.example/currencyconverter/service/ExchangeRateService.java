@@ -5,7 +5,6 @@ import org.example.currencyconverter.repository.ExchangeRateRepository;
 import org.example.currencyconverter.util.RiksbankApiReader;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,7 +42,7 @@ public class ExchangeRateService {
 
     public void updateExchangeRates() {
         RiksbankApiReader riksbankApiReader = new RiksbankApiReader();
-//        try {
+
         double sekToEur = riksbankApiReader.exchangeRate("SEKETT", "SEKEURPMI");
         double sekToUsd = riksbankApiReader.exchangeRate("SEKETT", "SEKUSDPMI");
 
@@ -56,12 +55,6 @@ public class ExchangeRateService {
         repository.save(new ExchangeRate("SEK", 1, sekToEur, sekToUsd));
         repository.save(new ExchangeRate("EUR", eurToSek, 1, eurToUsd));
         repository.save(new ExchangeRate("USD", usdToSek, usdToEur, 1));
-
-//            return HttpStatus.OK;
-
-//        } catch (RuntimeException e) {
-//            return HttpStatus.BAD_REQUEST;
-//        }
 
     }
 

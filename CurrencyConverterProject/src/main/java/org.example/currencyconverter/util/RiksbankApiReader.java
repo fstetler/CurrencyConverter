@@ -1,7 +1,6 @@
 package org.example.currencyconverter.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
 import java.net.URI;
@@ -9,14 +8,22 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDate;
-
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class RiksbankApiReader {
 
     public Double exchangeRate(String seriesId, String seriesIdToCompareTo) {
-        LocalDate todaysDate = LocalDate.now();
-
-        String exchangeRate = "https://api.riksbank.se/swea/v1/CrossRate/" + seriesId + "/" + seriesIdToCompareTo + "/" + todaysDate;
+        LocalDateTime todaysDateTime = LocalDateTime.now();
+        LocalDate todaysDate = todaysDateTime.toLocalDate();
+        LocalTime fourFifteenTime = LocalTime.of(16, 15);
+        LocalTime todaysTime = todaysDateTime.toLocalTime();
+        String exchangeRate;
+        if (todaysTime.isBefore(fourFifteenTime))  {
+            exchangeRate = "https://api.riksbank.se/swea/v1/CrossRates/" + seriesId + "/" + seriesIdToCompareTo + "/" + todaysDate.minusDays(1);
+        } else {
+            exchangeRate = "https://api.riksbank.se/swea/v1/CrossRates/" + seriesId + "/" + seriesIdToCompareTo + "/" + todaysDate;
+        }
 
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder().uri(URI.create(exchangeRate)).GET().build();
