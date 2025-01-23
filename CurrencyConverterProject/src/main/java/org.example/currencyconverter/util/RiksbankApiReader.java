@@ -64,14 +64,5 @@ public class RiksbankApiReader {
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
-//        LocalDateTime todaysDateTime = LocalDateTime.now();
-//        LocalDate todaysDate = todaysDateTime.toLocalDate();
-//        LocalTime fourFifteenTime = LocalTime.of(16, 15);
-//        LocalTime todaysTime = todaysDateTime.toLocalTime();
-//        if (todaysTime.isBefore(fourFifteenTime))  {
-//            return "https://api.riksbank.se/swea/v1/CrossRates/" + seriesId + "/" + seriesIdToCompareTo + "/" + todaysDate.minusDays(1);
-//        } else {
-//            return "https://api.riksbank.se/swea/v1/CrossRates/" + seriesId + "/" + seriesIdToCompareTo + "/" + todaysDate;
-//        }
     }
 }
