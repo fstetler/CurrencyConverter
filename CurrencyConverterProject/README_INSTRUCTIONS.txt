@@ -36,4 +36,6 @@ This will update the exchange rates. A new exchange rate is given by riksbanken 
 Epilogue:
 If I had more time I would have made tests, and mocked away the database and tested the service layer. I also
 would have dealt with what happens when the api isnt reachable, so it would give a error code 500. I would have made it
-so it returned a more reasonable code and a message telling us that the api was shut down or something similar.
+so it returned a more reasonable code and a message telling us that the api was shut down or something similar. Also that
+now its currently (probably) sensitive for changes around exaclty 16:15, new api might release 16:16 but data changes in
+code at 16:15. Make it more robust would be preferable.
