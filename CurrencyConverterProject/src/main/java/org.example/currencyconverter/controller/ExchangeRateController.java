@@ -17,8 +17,6 @@ import java.util.Optional;
 @RequestMapping(path = "api/v1")
 public class ExchangeRateController {
 
-    RiksbankApiReader riksbankApiReader = new RiksbankApiReader();
-
     private final ExchangeRateService exchangeRateService;
 
     public ExchangeRateController(ExchangeRateService exchangeRateService) {
@@ -51,6 +49,7 @@ public class ExchangeRateController {
     @PostMapping("/updateExchangeRates")
     public ResponseEntity<String> updateExchangeRates() {
         try {
+            RiksbankApiReader riksbankApiReader = new RiksbankApiReader();
             double sekToEur = riksbankApiReader.exchangeRate("SEKETT", "SEKEURPMI");
             double sekToUsd = riksbankApiReader.exchangeRate("SEKETT", "SEKUSDPMI");
 
