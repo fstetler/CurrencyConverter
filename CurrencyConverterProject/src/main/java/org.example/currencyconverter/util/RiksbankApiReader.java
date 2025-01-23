@@ -33,15 +33,45 @@ public class RiksbankApiReader {
         }
     }
 
-    private String getApiStringExchangeRate(String seriesId, String seriesIdToCompareTo) {
-        LocalDateTime todaysDateTime = LocalDateTime.now();
-        LocalDate todaysDate = todaysDateTime.toLocalDate();
-        LocalTime fourFifteenTime = LocalTime.of(16, 15);
-        LocalTime todaysTime = todaysDateTime.toLocalTime();
-        if (todaysTime.isBefore(fourFifteenTime))  {
-            return "https://api.riksbank.se/swea/v1/CrossRates/" + seriesId + "/" + seriesIdToCompareTo + "/" + todaysDate.minusDays(1);
-        } else {
-            return "https://api.riksbank.se/swea/v1/CrossRates/" + seriesId + "/" + seriesIdToCompareTo + "/" + todaysDate;
+    private String getApiStringExchangeRate(String seriesId, String seriesIdToCompareTo) throws TooManyRequestsException {
+        LocalDate today = LocalDate.now();
+
+        String latestDateApi = "https://api.riksbank.se/swea/v1/CalendarDays/" + today;
+
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(latestDateApi)).GET().build();
+
+        try {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 429) {
+                throw new TooManyRequestsException(response.body());
+            }
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            LastestDateApiResponse[] apiResponse = objectMapper.readValue(response.body(), LastestDateApiResponse[].class);
+
+            LocalDateTime todaysDateTime = LocalDateTime.now();
+            LocalTime fourFifteenTime = LocalTime.of(16, 15);
+            LocalTime todaysTime = todaysDateTime.toLocalTime();
+            LocalDate todaysDate = LocalDate.parse(apiResponse[0].getCalendarDate());
+
+            if (todaysTime.isBefore(fourFifteenTime))  {
+                return "https://api.riksbank.se/swea/v1/CrossRates/" + seriesId + "/" + seriesIdToCompareTo + "/" + todaysDate.minusDays(1);
+            } else {
+                return "https://api.riksbank.se/swea/v1/CrossRates/" + seriesId + "/" + seriesIdToCompareTo + "/" + todaysDate;
+            }
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
         }
+//        LocalDateTime todaysDateTime = LocalDateTime.now();
+//        LocalDate todaysDate = todaysDateTime.toLocalDate();
+//        LocalTime fourFifteenTime = LocalTime.of(16, 15);
+//        LocalTime todaysTime = todaysDateTime.toLocalTime();
+//        if (todaysTime.isBefore(fourFifteenTime))  {
+//            return "https://api.riksbank.se/swea/v1/CrossRates/" + seriesId + "/" + seriesIdToCompareTo + "/" + todaysDate.minusDays(1);
+//        } else {
+//            return "https://api.riksbank.se/swea/v1/CrossRates/" + seriesId + "/" + seriesIdToCompareTo + "/" + todaysDate;
+//        }
     }
 }
