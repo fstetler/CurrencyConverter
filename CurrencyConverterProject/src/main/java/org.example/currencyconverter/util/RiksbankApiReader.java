@@ -14,16 +14,8 @@ import java.time.LocalTime;
 public class RiksbankApiReader {
 
     public Double exchangeRate(String seriesId, String seriesIdToCompareTo) throws TooManyRequestsException {
-        LocalDateTime todaysDateTime = LocalDateTime.now();
-        LocalDate todaysDate = todaysDateTime.toLocalDate();
-        LocalTime fourFifteenTime = LocalTime.of(16, 15);
-        LocalTime todaysTime = todaysDateTime.toLocalTime();
-        String exchangeRate;
-        if (todaysTime.isBefore(fourFifteenTime))  {
-            exchangeRate = "https://api.riksbank.se/swea/v1/CrossRates/" + seriesId + "/" + seriesIdToCompareTo + "/" + todaysDate.minusDays(1);
-        } else {
-            exchangeRate = "https://api.riksbank.se/swea/v1/CrossRates/" + seriesId + "/" + seriesIdToCompareTo + "/" + todaysDate;
-        }
+
+        String exchangeRate = getApiStringExchangeRate(seriesId, seriesIdToCompareTo);
 
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder().uri(URI.create(exchangeRate)).GET().build();
@@ -38,6 +30,18 @@ public class RiksbankApiReader {
             return apiResponse[0].getValue();
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private String getApiStringExchangeRate(String seriesId, String seriesIdToCompareTo) {
+        LocalDateTime todaysDateTime = LocalDateTime.now();
+        LocalDate todaysDate = todaysDateTime.toLocalDate();
+        LocalTime fourFifteenTime = LocalTime.of(16, 15);
+        LocalTime todaysTime = todaysDateTime.toLocalTime();
+        if (todaysTime.isBefore(fourFifteenTime))  {
+            return "https://api.riksbank.se/swea/v1/CrossRates/" + seriesId + "/" + seriesIdToCompareTo + "/" + todaysDate.minusDays(1);
+        } else {
+            return "https://api.riksbank.se/swea/v1/CrossRates/" + seriesId + "/" + seriesIdToCompareTo + "/" + todaysDate;
         }
     }
 }
