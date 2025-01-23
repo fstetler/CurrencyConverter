@@ -1,15 +1,15 @@
 package org.example.currencyconverter.util;
 
-public class ApiResponse {
+public class DateValueApiResponse {
 
     private String date;
 
     private double value;
 
-    public ApiResponse() {
+    public DateValueApiResponse() {
     }
 
-    public ApiResponse(String date, double value) {
+    public DateValueApiResponse(String date, double value) {
         this.date = date;
         this.value = value;
     }

@@ -2,7 +2,6 @@ package org.example.currencyconverter.service;
 
 import org.example.currencyconverter.model.ExchangeRate;
 import org.example.currencyconverter.repository.ExchangeRateRepository;
-import org.example.currencyconverter.util.TooManyRequestsException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

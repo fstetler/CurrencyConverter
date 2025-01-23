@@ -26,7 +26,7 @@ public class RiksbankApiReader {
                 throw new TooManyRequestsException(response.body());
             }
             ObjectMapper objectMapper = new ObjectMapper();
-            ApiResponse[] apiResponse = objectMapper.readValue(response.body(), ApiResponse[].class);
+            DateValueApiResponse[] apiResponse = objectMapper.readValue(response.body(), DateValueApiResponse[].class);
             return apiResponse[0].getValue();
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
